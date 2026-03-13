@@ -2,246 +2,107 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>易智行 7.0 · 曾仕强智慧道场</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>易智行 8.0 · 曾仕强智慧精舍</title>
     <style>
-        :root {
-            --gold: #c5a059;
-            --ink: #1c1c1e;
-            --paper: #f4f1ea;
-            --red: #8b0000;
-            --jade: #3a5a40;
-        }
-
-        body {
-            background-color: var(--ink);
-            background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
-            color: var(--paper);
-            font-family: 'STKaiti', 'KaiTi', serif;
-            margin: 0; padding: 0;
-            display: flex; flex-direction: column; align-items: center;
-        }
-
-        header {
-            width: 100%; text-align: center; padding: 40px 0;
-            border-bottom: 1px solid var(--gold);
-            background: rgba(28,28,30,0.9);
-            position: sticky; top: 0; z-index: 100;
-        }
-        header h1 { font-size: 1.8rem; color: var(--gold); margin: 0; letter-spacing: 8px; }
-
-        .container { width: 90%; max-width: 500px; padding: 20px 0 80px; }
-
-        /* 极简问事 */
-        .q-input {
-            border: 1px solid var(--gold); border-radius: 4px; padding: 15px; margin-bottom: 30px;
-            background: rgba(0,0,0,0.3);
-        }
-        .q-input textarea {
-            width: 100%; background: transparent; border: none; color: var(--gold);
-            font-size: 1.1rem; outline: none; height: 30px; text-align: center;
-        }
-
-        /* 卦象区 - 增强仪式感 */
-        .gua-stage {
-            background: rgba(255,255,255,0.02); border: 1px solid rgba(197,160,89,0.3);
-            border-radius: 2px; padding: 40px; display: flex; flex-direction: column-reverse; 
-            gap: 18px; margin-bottom: 30px; position: relative;
-        }
-        .gua-stage::before { content: "本卦"; position: absolute; left: 10px; top: 10px; color: var(--gold); font-size: 0.7rem; writing-mode: vertical-lr; }
-
-        .yao-line { height: 18px; width: 100%; display: flex; justify-content: center; align-items: center; position: relative; }
-        .yao-label { position: absolute; left: -45px; font-size: 0.75rem; color: var(--gold); opacity: 0.6; }
-        .line-body { height: 100%; border-radius: 2px; transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
-        .yang { width: 100%; background: var(--gold); box-shadow: 0 0 10px rgba(197,160,89,0.2); }
+        :root { --gold: #b89b5e; --ink: #1a1a1a; --paper: #f2ede4; --red: #8e2929; --jade: #2e4a3e; }
+        body { background-color: #121212; color: #d1d1d1; font-family: 'STKaiti', 'KaiTi', serif; margin: 0; padding: 0; }
+        .paper-bg { background-color: var(--paper); background-image: url('https://www.transparenttextures.com/patterns/pinstriped-suit.png'); color: var(--ink); border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); position: relative; overflow: hidden; }
+        header { text-align: center; padding: 30px 0; background: #1a1a1a; border-bottom: 1px solid var(--gold); }
+        header h1 { color: var(--gold); letter-spacing: 10px; margin: 0; font-size: 1.8rem; }
+        .container { width: 92%; max-width: 500px; margin: 0 auto; padding: 20px 0 100px; }
+        .q-input { border: 1px solid var(--gold); padding: 15px; margin-bottom: 25px; background: rgba(255,255,255,0.03); }
+        .q-input input { width: 100%; background: transparent; border: none; color: var(--gold); font-size: 1.1rem; text-align: center; outline: none; font-family: inherit; }
+        .gua-stage { display: flex; flex-direction: column-reverse; gap: 15px; padding: 30px; background: rgba(0,0,0,0.2); border: 1px solid #333; margin-bottom: 25px; }
+        .yao-row { height: 18px; width: 100%; display: flex; justify-content: center; align-items: center; position: relative; }
+        .yao-tag { position: absolute; left: -40px; font-size: 0.7rem; color: #666; }
+        .line-body { height: 100%; border-radius: 2px; transition: 0.5s; }
+        .yang { width: 100%; background: var(--gold); }
         .yin { width: 100%; display: flex; justify-content: space-between; }
         .yin::before, .yin::after { content: ""; width: 44%; height: 100%; background: #444; }
-        .moving::after { content: "✕"; position: absolute; right: -30px; color: var(--red); font-weight: bold; animation: pulse 1s infinite; }
-        @keyframes pulse { 50% { opacity: 0.2; transform: scale(1.2); } }
-
-        /* 操作台 */
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        button {
-            padding: 16px; border: 1px solid var(--gold); background: transparent; 
-            color: var(--gold); font-family: inherit; font-size: 1rem; cursor: pointer;
-        }
-        .prime { 
-            grid-column: span 2; background: var(--gold); color: var(--ink); 
-            font-weight: bold; font-size: 1.2rem; border: none; margin-top: 10px;
-        }
-
-        /* 结果解析区 - 卷轴风格 */
-        #result-area { display: none; margin-top: 40px; width: 100%; }
-        .scroll {
-            background-color: var(--paper); color: var(--ink); padding: 30px;
-            border-radius: 2px; position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-            border: 1px solid #dcd7c9;
-        }
-        .scroll-header { border-bottom: 2px solid var(--ink); padding-bottom: 15px; margin-bottom: 25px; text-align: center; }
-        .scroll-header h2 { margin: 0; font-size: 2rem; letter-spacing: 5px; color: var(--red); }
-        
-        .wisdom-block { margin-bottom: 30px; position: relative; }
-        .wisdom-block h4 { 
-            background: var(--ink); color: var(--paper); display: inline-block;
-            padding: 2px 12px; font-size: 0.9rem; margin-bottom: 15px;
-        }
-        .wisdom-block p { margin: 0; line-height: 2; font-size: 1.05rem; text-align: justify; }
-
-        .zhi-gua {
-            background: rgba(0,0,0,0.05); padding: 15px; border: 1px dashed var(--gray);
-            margin-top: 10px; border-radius: 4px;
-        }
-
-        .action-card {
-            border: 2px solid var(--jade); padding: 20px; border-radius: 8px;
-            background: #fdfdfb; margin-top: 20px;
-        }
-        .action-card strong { color: var(--jade); font-size: 1.1rem; display: block; margin-bottom: 10px; border-bottom: 1px solid var(--jade); }
+        .is-moving::after { content: "✕"; position: absolute; right: -30px; color: var(--red); font-weight: bold; animation: pulse 1s infinite; }
+        @keyframes pulse { 50% { opacity: 0.3; } }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        button { padding: 15px; border: 1px solid var(--gold); background: transparent; color: var(--gold); font-family: inherit; cursor: pointer; }
+        .prime { grid-column: span 2; background: var(--gold); color: #000; font-weight: bold; border: none; }
+        #result-area { display: none; margin-top: 30px; }
+        .scroll-content { padding: 25px; }
+        .scroll-header { border-bottom: 2px solid var(--ink); margin-bottom: 20px; text-align: center; }
+        .scroll-header h2 { margin: 0; font-size: 2rem; color: var(--red); letter-spacing: 5px; }
+        .sancai-box { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+        .sancai-item { border: 1px solid #ccc; padding: 8px; text-align: center; font-size: 0.75rem; }
+        .sancai-item b { display: block; color: var(--red); font-size: 0.9rem; }
+        .wisdom-card { margin-bottom: 20px; border-left: 4px solid var(--jade); padding-left: 12px; }
+        .wisdom-card h4 { margin: 0 0 8px 0; color: var(--jade); font-size: 1rem; }
+        .wisdom-card p { margin: 0; line-height: 1.7; text-align: justify; font-size: 0.95rem; }
     </style>
 </head>
 <body>
-
-<header>
-    <h1>易智行 7.0</h1>
-    <div style="font-size: 0.75rem; color: var(--gold); letter-spacing: 2px; margin-top: 5px;">【 持 经 达 变 · 顺 天 应 人 】</div>
-</header>
-
+<header><h1>易智行 8.0</h1></header>
 <div class="container">
-    <div class="q-input">
-        <textarea id="question" placeholder="诚心默念疑惑，在此落笔"></textarea>
-    </div>
-
+    <div class="q-input"><input type="text" id="question" placeholder="诚心默念疑惑，在此落笔"></div>
     <div class="gua-stage" id="stage"></div>
-
     <div class="btn-grid">
-        <button onclick="addYao(1)">⚊ 记阳爻 (九)</button>
-        <button onclick="addYao(0)">⚋ 记阴爻 (六)</button>
-        <button onclick="markMoving()" style="grid-column: span 2;">标记此爻为“变爻” (动则思变)</button>
-        <button onclick="clearAll()">焚香重起</button>
+        <button onclick="addYao(1)">⚊ 记阳爻</button>
+        <button onclick="addYao(0)">⚋ 记阴爻</button>
+        <button onclick="markMoving()" style="grid-column: span 2;">标记此爻为“变爻”</button>
+        <button onclick="clearAll()">重置起卦</button>
         <button class="prime" onclick="solve()">开启智慧推演</button>
     </div>
-
     <div id="result-area">
-        <div class="scroll">
-            <div class="scroll-header">
-                <h2 id="r-name">卦名</h2>
-                <div id="r-type" style="font-size: 0.9rem; margin-top: 10px; font-weight: bold;"></div>
+        <div class="paper-bg scroll-content">
+            <div class="scroll-header"><h2 id="r-name">卦名</h2><div id="r-sub" style="font-size: 0.8rem; margin-top:5px;"></div></div>
+            <div class="sancai-box">
+                <div class="sancai-item"><b>天</b>时位<br><span id="sc-t"></span></div>
+                <div class="sancai-item"><b>人</b>人事<br><span id="sc-p"></span></div>
+                <div class="sancai-item"><b>地</b>根基<br><span id="sc-g"></span></div>
             </div>
-
-            <div class="wisdom-block">
-                <h4>【本卦：当下之局】</h4>
-                <p id="r-current"></p>
+            <div class="wisdom-card" id="r-bian-box" style="display:none; background:rgba(142,41,41,0.05);">
+                <h4>【变卦趋势】</h4><p id="r-bian-text"></p>
             </div>
-
-            <div class="wisdom-block" id="change-block" style="display:none;">
-                <h4>【变卦：未来趋势】</h4>
-                <div class="zhi-gua" id="r-future"></div>
-            </div>
-
-            <div class="wisdom-block">
-                <h4>【曾师修身点拨】</h4>
-                <p id="r-zeng" style="font-style: italic; color: #444;"></p>
-            </div>
-
-            <div class="action-card">
-                <strong>今日行动锦囊</strong>
-                <div id="r-action"></div>
-            </div>
-
-            <div style="text-align: center; margin-top: 40px; border-top: 1px solid #ddd; padding-top: 20px;">
-                <button onclick="window.print()" style="border: none; font-size: 0.8rem; color: #888;">保存智慧卡片</button>
-            </div>
+            <div class="wisdom-card"><h4>【曾师实战心法】</h4><p id="r-zeng-main"></p></div>
+            <div class="wisdom-card" style="border-color: var(--gold);"><h4>【应对策】</h4><div id="r-steps"></div></div>
         </div>
     </div>
 </div>
-
 <script>
-    let gua = []; 
-    const TRI_MAP = {
-        "111": {n: "乾", e: "天", w: "金", d: "刚健中正"},
-        "000": {n: "坤", e: "地", w: "土", d: "厚德载物"},
-        "100": {n: "震", e: "雷", w: "木", d: "奋发惊动"},
-        "011": {n: "巽", e: "风", w: "木", d: "柔顺深入"},
-        "010": {n: "坎", e: "水", w: "水", d: "陷险而信"},
-        "101": {n: "离", e: "火", w: "火", d: "明丽依附"},
-        "001": {n: "艮", e: "山", w: "土", d: "止而不动"},
-        "110": {n: "兑", e: "泽", w: "金", d: "喜悦交流"}
-    };
-
-    function addYao(t) { if(gua.length < 6) { gua.push({t, m: false}); render(); } }
-    function markMoving() { if(gua.length > 0) { gua[gua.length-1].m = !gua[gua.length-1].m; render(); } }
-    function clearAll() { gua = []; render(); document.getElementById('result-area').style.display = 'none'; }
-
-    function render() {
-        const stage = document.getElementById('stage');
-        stage.innerHTML = '';
-        const names = ["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"];
-        gua.forEach((y, i) => {
-            const row = document.createElement('div');
-            row.className = `yao-line ${y.m ? 'moving' : ''}`;
-            row.innerHTML = `<div class="yao-label">${names[i]}</div><div class="line-body ${y.t===1?'yang':'yin'}"></div>`;
+    let gua = [];
+    const TRI_DATA = {"111":{n:"乾",e:"天",q:"健"},"000":{n:"坤",e:"地",q:"顺"},"100":{n:"震",e:"雷",q:"动"},"011":{n:"巽",e:"风",q:"入"},"010":{n:"坎",e:"水",q:"陷"},"101":{n:"离",e:"火",q:"丽"},"001":{n:"艮",e:"山",q:"止"},"110":{n:"兑",e:"泽",q:"悦"}};
+    function addYao(t){ if(gua.length<6){ gua.push({t, m:false}); render(); } }
+    function markMoving(){ if(gua.length>0){ gua[gua.length-1].m=!gua[gua.length-1].m; render(); } }
+    function clearAll(){ gua=[]; render(); document.getElementById('result-area').style.display='none'; }
+    function render(){
+        const stage = document.getElementById('stage'); stage.innerHTML = '';
+        const labels = ["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"];
+        gua.forEach((y,i)=>{
+            const row = document.createElement('div'); row.className = `yao-row ${y.m?'is-moving':''}`;
+            row.innerHTML = `<div class="yao-tag">${labels[i]}</div><div class="line-body ${y.t===1?'yang':'yin'}"></div>`;
             stage.appendChild(row);
         });
     }
-
-    function getGuaInfo(codes) {
-        const low = TRI_MAP[codes.substring(0,3)];
-        const up = TRI_MAP[codes.substring(3,6)];
-        let name = up.n + low.n;
-        if(up.n === low.n) name = up.n + "为" + up.e;
-        // 特殊卦名修正
-        const special = {"坤兑":"地泽临","坤震":"地雷复","乾坤":"天地否","坤乾":"地天泰","坎离":"水火既济","离坎":"火水未济"};
-        return { name: special[up.n+low.n] || name, up, low };
+    function getInfo(code){
+        const low=TRI_DATA[code.substring(0,3)], up=TRI_DATA[code.substring(3,6)];
+        const names={"坤兑":"地泽临","坤乾":"地天泰","乾坤":"天地否","乾乾":"乾为天","坤坤":"坤为地","离坎":"火水未济","坎离":"水火既济"};
+        return { name: names[up.n+low.n] || (up.n+low.n), up, low };
     }
-
-    function solve() {
-        if(gua.length < 6) return;
-        const q = document.getElementById('question').value || "日常修行";
-        const currentCode = gua.map(y => y.t).join('');
-        const ben = getGuaInfo(currentCode);
-        
-        // 计算变卦
-        const moveIndices = gua.map((y, i) => y.m ? i : -1).filter(i => i !== -1);
-        const zhiCode = gua.map(y => y.m ? 1-y.t : y.t).join('');
-        const zhi = getGuaInfo(zhiCode);
-
-        // 显示结果
+    function solve(){
+        if(gua.length<6) return;
+        const benCode=gua.map(y=>y.t).join(''), ben=getInfo(benCode);
+        const zhiCode=gua.map(y=>y.m?1-y.t:y.t).join(''), zhi=getInfo(zhiCode);
         document.getElementById('r-name').innerText = ben.name;
-        document.getElementById('r-type').innerText = `【 ${ben.up.e} / ${ben.low.e} 】`;
-        
-        // 本卦分析
-        document.getElementById('r-current').innerText = `你当前处于“${ben.up.e}”下有“${ben.low.e}”的格局中。曾教授教导我们：${ben.up.d}是你的环境，${ben.low.d}是你的内心。现在的局面要求你：外在要${ben.up.d}，内在要${ben.low.d}。`;
-
-        // 变卦分析
-        const changeBlock = document.getElementById('change-block');
-        if(moveIndices.length > 0) {
-            changeBlock.style.display = 'block';
-            document.getElementById('r-future').innerText = `动爻位于第 ${moveIndices.map(i=>i+1).join(',')} 爻。这意味着局势正在从【${ben.name}】向【${zhi.name}】演化。曾师常讲：‘动则变，变则通。’ 未来的重点将转向“${zhi.up.d}”，建议你提前布局。`;
-        } else {
-            changeBlock.style.display = 'none';
+        document.getElementById('r-sub').innerText = `【 ${ben.up.e} / ${ben.low.e} 】`;
+        document.getElementById('sc-g').innerText = gua[0].t+gua[1].t>=1?"根基稳":"基不牢";
+        document.getElementById('sc-p').innerText = gua[2].t+gua[3].t>=1?"人事兴":"人被动";
+        document.getElementById('sc-t').innerText = gua[4].t+gua[5].t>=1?"时机到":"时未至";
+        if(benCode!==zhiCode){
+            document.getElementById('r-bian-box').style.display='block';
+            document.getElementById('r-bian-text').innerText = `由${ben.name}变为${zhi.name}。曾师云：动则变，变则通。重点关注“${zhi.up.e}”带来的后势影响。`;
         }
-
-        // 曾师语录及实战建议 (深度化)
-        const zengDict = {
-            "地泽临": "曾教授常说：‘临卦就是大好时机。’ 但他也提醒，到了八月就会有凶险。这告诉我们，当你最顺手的时候，一定要预见到不顺。这就是忧患意识。",
-            "天地否": "曾教授语：‘否（pǐ）卦不是坏事。’ 它是老天在考研你，看你在这种上下不通、别人不理你的时候，能不能守住内心的文明。",
-            "日常": "曾教授智慧：‘易经是解忧之书。’ 遇到任何事，先问问自己：我的位子对不对？我的德行够不够？时机成熟了吗？"
-        };
-        document.getElementById('r-zeng').innerText = zengDict[ben.name] || zengDict["日常"];
-
-        const actions = {
-            "地泽临": ["【亲自督导】重要的事别只听汇报。","【施与恩惠】现在是笼络人心最好的时机。","【未雨绸缪】现在的顺，是为将来的变做准备。"],
-            "通用": ["【静心】先处理情绪，再处理事情。","【守位】做你该做的事，别越权。","【待时】如果感觉阻力大，就先蓄势。"]
-        };
-        const activeList = actions[ben.name] || actions["通用"];
-        document.getElementById('r-action').innerHTML = activeList.map(a => `<p style="margin:8px 0;">• ${a}</p>`).join('');
-
-        document.getElementById('result-area').style.display = 'block';
+        document.getElementById('r-zeng-main').innerText = "曾教授心法：位要正，名要顺。你现在的局面，关键看你能不能守住本分，顺应自然规律。";
+        document.getElementById('r-steps').innerHTML = "• 守住当前“"+ben.low.e+"”的内在定力。<br>• 应对外在“"+ben.up.e+"”的环境变化。";
+        document.getElementById('result-area').style.display='block';
         window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
     }
 </script>
-
 </body>
 </html>
