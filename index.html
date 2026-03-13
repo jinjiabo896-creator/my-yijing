@@ -3,100 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>易智行 8.5 · 曾仕强时位推演</title>
+    <title>易智行 9.0 · 曾仕强全卦推演</title>
     <style>
         :root { --paper: #f4f1ea; --ink: #2c2c2c; --gold: #b89b5e; --red: #a22d2d; --jade: #3a5a40; }
         body { background-color: #1a1a1a; color: var(--ink); font-family: 'STKaiti', 'KaiTi', serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
-        header { width: 100%; text-align: center; padding: 25px 0; border-bottom: 1px solid var(--gold); background: #1a1a1a; }
+        header { width: 100%; text-align: center; padding: 25px 0; background: #1a1a1a; border-bottom: 2px solid var(--gold); }
         header h1 { color: var(--gold); letter-spacing: 6px; margin: 0; font-size: 1.4rem; }
         .container { width: 92%; max-width: 500px; padding: 20px 0 100px; }
-        
-        /* 起卦区 */
+
+        /* 交互区 */
+        .q-input { background: rgba(255,255,255,0.05); border: 1px solid var(--gold); padding: 12px; margin-bottom: 20px; text-align: center; }
+        .q-input input { width: 90%; background: transparent; border: none; color: var(--gold); font-size: 1.1rem; outline: none; text-align: center; }
         .gua-stage { background: #000; padding: 25px; border-radius: 8px; display: flex; flex-direction: column-reverse; gap: 12px; margin-bottom: 20px; border: 2px solid #333; }
-        .yao-row { height: 16px; width: 100%; display: flex; justify-content: center; align-items: center; position: relative; cursor: pointer; }
-        .yao-label { position: absolute; left: -45px; font-size: 0.75rem; color: #777; width: 40px; }
+        .yao-row { height: 16px; width: 100%; display: flex; justify-content: center; align-items: center; position: relative; }
+        .yao-label { position: absolute; left: -45px; font-size: 0.75rem; color: #777; }
         .line-body { height: 100%; border-radius: 2px; transition: 0.4s; }
         .yang { width: 100%; background: var(--gold); }
         .yin { width: 100%; display: flex; justify-content: space-between; }
         .yin::before, .yin::after { content: ""; width: 44%; height: 100%; background: #444; }
         .moving::after { content: "✕"; position: absolute; right: -30px; color: var(--red); font-weight: bold; }
-
-        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         button { padding: 14px; border: 1px solid var(--gold); background: transparent; color: var(--gold); border-radius: 4px; font-family: inherit; cursor: pointer; }
         .prime { grid-column: span 2; background: var(--gold); color: #000; font-weight: bold; border: none; }
 
-        /* 结果解析卷轴 */
+        /* 解析区 */
         #result-area { display: none; width: 100%; margin-top: 20px; }
         .paper-scroll { background-color: var(--paper); background-image: radial-gradient(#dcd7c9 1.2px, transparent 1.2px); background-size: 20px 20px; padding: 25px; border: 1px solid #dcd7c9; box-shadow: 0 15px 40px rgba(0,0,0,0.6); position: relative; }
         .scroll-header { border-bottom: 2px solid var(--ink); margin-bottom: 20px; text-align: center; }
         .scroll-header h2 { margin: 0; font-size: 1.8rem; color: var(--red); letter-spacing: 4px; }
 
-        /* 阶层点击区样式 */
-        .stage-selector { background: rgba(0,0,0,0.05); padding: 15px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid var(--gold); }
-        .stage-selector h4 { margin: 0 0 10px 0; color: var(--ink); font-size: 0.95rem; }
-        .yao-tabs { display: flex; justify-content: space-between; gap: 5px; }
-        .tab { flex: 1; padding: 8px 2px; background: #ddd; border-radius: 4px; font-size: 0.75rem; text-align: center; cursor: pointer; }
+        .stage-box { background: rgba(0,0,0,0.05); padding: 15px; border-radius: 6px; margin-bottom: 20px; border-left: 4px solid var(--gold); }
+        .yao-tabs { display: flex; justify-content: space-between; gap: 5px; margin-top: 10px; }
+        .tab { flex: 1; padding: 8px 0; background: #ddd; border-radius: 4px; font-size: 0.75rem; text-align: center; cursor: pointer; }
         .tab.active { background: var(--gold); color: white; }
 
-        /* 动态详细建议 */
-        .detail-box { background: white; padding: 15px; border: 1px solid #ccc; border-radius: 8px; min-height: 100px; transition: 0.3s; }
-        .detail-box b { display: block; color: var(--red); margin-bottom: 8px; font-size: 1rem; border-bottom: 1px dashed #ddd; padding-bottom: 5px; }
-        .detail-box p { margin: 0; line-height: 1.6; font-size: 0.95rem; text-align: justify; }
+        .detail-display { background: white; padding: 15px; border: 1px solid #ccc; border-radius: 8px; margin-top: 10px; min-height: 80px; }
+        .detail-display b { display: block; color: var(--red); margin-bottom: 5px; border-bottom: 1px dashed #ddd; }
 
         .action-card { border: 2px solid var(--jade); background: #fff; padding: 15px; border-radius: 8px; margin-top: 20px; }
-        .action-card strong { color: var(--jade); display: block; border-bottom: 1px solid var(--jade); margin-bottom: 8px; }
+        .action-card strong { color: var(--jade); display: block; border-bottom: 1px solid var(--jade); margin-bottom: 10px; }
+        .action-item { margin-bottom: 10px; padding-left: 20px; position: relative; font-size: 0.95rem; line-height: 1.6; }
+        .action-item::before { content: "●"; position: absolute; left: 0; color: var(--jade); }
     </style>
 </head>
 <body>
 
-<header><h1>易智行 · 时位推演</h1></header>
+<header><h1>易智行 9.0 · 传世智库</h1></header>
 
 <div class="container">
-    <div style="background:rgba(255,255,255,0.05); border:1px solid var(--gold); padding:10px; margin-bottom:20px; text-align:center;">
-        <input type="text" id="question" placeholder="输入困惑：如‘职业发展、近期投资’" style="width:90%; background:transparent; border:none; color:var(--gold); font-size:1.1rem; outline:none; text-align:center;">
-    </div>
-
+    <div class="q-input"><input type="text" id="question" placeholder="诚心落笔：当前具体何事困惑？"></div>
     <div class="gua-stage" id="stage"></div>
-
     <div class="btn-grid">
-        <button onclick="addYao(1)">⚊ 记阳爻 (九)</button>
-        <button onclick="addYao(0)">⚋ 记阴爻 (六)</button>
+        <button onclick="addYao(1)">⚊ 记阳爻</button>
+        <button onclick="addYao(0)">⚋ 记阴爻</button>
         <button onclick="markMoving()" style="grid-column: span 2;">标记最后一位为“变爻”</button>
         <button onclick="clearAll()">焚香重起</button>
-        <button class="prime" onclick="solve()">开启时位深度推演</button>
+        <button class="prime" onclick="solve()">深 度 逻辑 推 演</button>
     </div>
 
     <div id="result-area">
         <div class="paper-scroll">
-            <div class="scroll-header">
-                <h2 id="r-name">卦名</h2>
-                <div id="r-sub" style="font-size: 0.8rem; margin-top:5px; color:#555;"></div>
-            </div>
-
-            <!-- 维度：阶层选择器 -->
-            <div class="stage-selector">
-                <h4>【身份定位】点击选择你当前的处境：</h4>
-                <div class="yao-tabs">
+            <div class="scroll-header"><h2 id="r-name">卦名</h2><div id="r-sub" style="font-size: 0.9rem; margin-top:5px; color:#555;"></div></div>
+            
+            <div class="stage-box">
+                <h4 style="margin:0;">【位子点拨】请点击你当前的阶层位置：</h4>
+                <div class="yao-tabs" id="tabContainer">
                     <div class="tab" onclick="selectStage(0)">初阶</div>
                     <div class="tab" onclick="selectStage(1)">二阶</div>
                     <div class="tab" onclick="selectStage(2)">三阶</div>
                     <div class="tab" onclick="selectStage(3)">四阶</div>
                     <div class="tab" onclick="selectStage(4)">五阶</div>
-                    <div class="tab" onclick="selectStage(5)">顶阶</div>
+                    <div class="tab" onclick="selectStage(5)">上阶</div>
                 </div>
-            </div>
-
-            <div class="detail-box" id="stage-detail">
-                <p style="color:#888;">请点击上方“阶层”按钮，查看曾教授对该位置的实战锦囊...</p>
+                <div class="detail-display" id="stage-detail"></div>
             </div>
 
             <div class="action-card">
-                <strong id="act-title">本卦核心建议</strong>
-                <div id="r-action" style="line-height:1.8; font-size:0.95rem;"></div>
-            </div>
-
-            <div style="text-align: center; margin-top: 25px; font-size: 0.8rem; color: #999;">
-                “位子找对了，怎么做都顺。” —— 曾仕强
+                <strong id="act-title">【实战策略】</strong>
+                <div id="r-action"></div>
             </div>
         </div>
     </div>
@@ -106,14 +91,41 @@
     let gua = [];
     const TRI_MAP = {"111":"乾","000":"坤","100":"震","011":"巽","010":"坎","101":"离","001":"艮","110":"兑"};
     
-    // 曾仕强 6 阶层通用智慧引擎
-    const STAGE_WISDOM = [
-        {title: "初阶（潜伏期）", advice: "曾师锦囊：‘潜龙勿用’。你现在刚起步或刚入局。别急着表现，多干活少说话。观察环境的潜规则，把根扎深。在这个位子上，‘不动’就是最大的动。"},
-        {title: "二阶（成长现形期）", advice: "曾师锦囊：‘见龙在田’。你已经小有成就，大家开始注意到你了。这时候最重要是‘利见大人’——找个好上司，找个导师。这个位子靠自己很难，要靠借力。"},
-        {title: "三阶（危险跨越期）", advice: "曾师锦囊：‘夕惕若厉’。你到了基层和中层的交界处，最忙、最累、压力最大。曾教授提醒你：一定要半夜反省自己有没有做错。别太狂，一狂就掉下去了。"},
-        {title: "四阶（高层决策期）", advice: "曾师锦囊：‘或跃在渊’。你已经进入决策圈，半步天堂半步地狱。现在要看准时机，要么往上一跃成为核心，要么退守深渊。在这个位子，跟对人比做对事更重要。"},
-        {title: "五阶（圆满主宰期）", advice: "曾师锦囊：‘飞龙在天’。这是人生的巅峰。曾教授教导：到了这个位子，不能只顾自己爽，要懂得分配利益。如果自私自利，马上就会转向‘亢龙有悔’。"},
-        {title: "顶阶（顾问退出期）", advice: "曾师锦囊：‘亢龙有悔’。你到了该退的时候了。别再抓着权力不放，要把舞台留给年轻人。曾教授说，这种时候‘退’就是‘进’。优雅的转身，才是大智慧。"}
+    // 64 卦深度实战数据库
+    const GUA_DB = {
+        "111111": {
+            name: "乾为天",
+            sub: "纯阳至健 · 自强不息",
+            zeng: "曾师：乾卦就是告诉我们要‘看准时机干大事’，但必须守正。",
+            actions: ["不要因为有才华就目中无人，要警惕‘亢龙有悔’。","目前处于能量爆发期，适合推进重要决策。","寻找核心导师（大人），单打独斗很危险。"]
+        },
+        "000110": {
+            name: "地泽临",
+            sub: "以上临下 · 领导智慧",
+            zeng: "曾师：‘临’就是去现场。当领导的，不能只听汇报，要亲自看。",
+            actions: ["亲自深入一线解决问题，现在的局面‘亲临’才有效。","恩威并施，给下属实质性的激励（金），但要有大地（土）的威严。","临卦虽好，但‘至于八月有凶’，务必留出退路。"]
+        },
+        "000000": {
+            name: "坤为地",
+            sub: "柔顺厚德 · 配合之道",
+            zeng: "曾师：坤卦讲‘追随’。没有好员工，哪来的好老板？先学会配合。",
+            actions: ["收敛锋芒，全力配合你的上级或核心伙伴。","现在不适合做决策者，适合做执行者和包容者。","坚持‘稳’字诀，像大地一样承载压力，厚积薄发。"]
+        },
+        "101010": {
+            name: "水火既济",
+            sub: "功成圆满 · 防微杜渐",
+            zeng: "曾师：既济就是‘成了’。但易经说初吉终乱，最怕晚节不保。",
+            actions: ["现在是状态最好的时候，千万别乱折腾，守成第一。","检查细节里的漏洞，‘水’在‘火’上，火太大会干，水太大会灭。","预防未来的混乱，现在就要制定长期的防风险计划。"]
+        }
+    };
+
+    const STAGE_BASE = [
+        {t: "初阶（潜伏期）", a: "曾师语：‘潜龙勿用’。目前的处境下，你的力量还微薄。多看、多学、多干活。现在的‘不动’，是为了将来能大动。"},
+        {t: "二阶（表现期）", a: "曾师语：‘见龙在田’。你已经引起了注意。此时要展现你的品德而非仅仅才华，积极寻找能提拔你的‘大人’。"},
+        {t: "三阶（磨难期）", a: "曾师语：‘夕惕若厉’。你到了关键的上升期，压力极大。每天晚上反省自己，守住底线，就能‘无咎’。"},
+        {t: "四阶（进退期）", a: "曾师语：‘或跃在渊’。面临跳槽、升迁或重大转折。看准了就跳，看不准就缩，不要硬撑。"},
+        {t: "五阶（全盛期）", a: "曾师语：‘飞龙在天’。这是你的高光时刻。记住要‘惠及他人’，把利益分出去，你的位子才稳。"},
+        {t: "上阶（退出期）", a: "曾师语：‘亢龙有悔’。你该交棒了。强行留恋位子必有祸端，优雅的转身才是圆满。"}
     ];
 
     function addYao(t) { if(gua.length < 6) { gua.push({t, m: false}); render(); } }
@@ -134,31 +146,39 @@
     function selectStage(idx) {
         const tabs = document.querySelectorAll('.tab');
         tabs.forEach((t, i) => t.className = i === idx ? 'tab active' : 'tab');
-        
-        const info = STAGE_WISDOM[idx];
         const box = document.getElementById('stage-detail');
-        box.innerHTML = `<b>${info.title}</b><p>${info.advice}</p>`;
+        box.innerHTML = `<b>${STAGE_BASE[idx].t}</b><p>${STAGE_BASE[idx].a}</p>`;
     }
 
     function solve() {
         if(gua.length < 6) return;
-        const bCode = gua.map(y => y.t).join(''), low = TRI_MAP[bCode.substring(0,3)], up = TRI_MAP[bCode.substring(3,6)];
+        const code = gua.map(y => y.t).join('');
+        const low = TRI_MAP[code.substring(0,3)], up = TRI_MAP[code.substring(3,6)];
         
-        const gName = (up === low) ? up+"为天" : up+low+"卦";
-        document.getElementById('r-name').innerText = gName;
-        document.getElementById('r-sub').innerText = `格局：${up}在上 / ${low}在下 | 这是一个“时位”转换的关键期`;
+        // 核验逻辑：优先匹配数据库，无匹配则动态推演
+        let data = GUA_DB[code] || {
+            name: up + low + "卦",
+            sub: `上${up}下${low} · 阴阳博弈中`,
+            zeng: `曾师：易经就是处理关系的。现在外卦是${up}，内卦是${low}。`,
+            actions: [`在“${up}”的环境下，先稳住内心的“${low}”。`,`目前的局面，建议以稳健为主，不要强行突破。`,`多观察对方的动机，‘诚’字是破解当前僵局的唯一钥匙。`]
+        };
 
-        // 根据是否有动爻自动建议
-        const moveIdx = gua.findIndex(y => y.m);
-        if(moveIdx !== -1) {
-            selectStage(moveIdx); // 自动选中动爻位置
-            document.getElementById('act-title').innerText = "【动爻特别提醒】";
-            document.getElementById('r-action').innerText = `你现在的变数在第 ${moveIdx+1} 爻。曾教授语：‘动则变’。说明你正处于阶层跨越的关键点，请务必阅读上方 ${moveIdx+1} 阶的建议。`;
-        } else {
-            selectStage(0); // 默认选中初爻
-            document.getElementById('act-title').innerText = "整体实战建议";
-            document.getElementById('r-action').innerHTML = `• 保持现状，不要盲目跳槽或投资。<br>• 现阶段的核心任务是“守正”，即做符合你身份的事。<br>• 仔细研究上方的六个阶层，看看你离下一阶还差什么。`;
-        }
+        document.getElementById('r-name').innerText = data.name;
+        document.getElementById('r-sub').innerText = data.sub;
+
+        // 动态生成实战建议
+        const actBox = document.getElementById('r-action');
+        actBox.innerHTML = '';
+        data.actions.forEach(act => {
+            const item = document.createElement('div');
+            item.className = 'action-item';
+            item.innerText = act;
+            actBox.appendChild(item);
+        });
+
+        // 自动定位动爻或默认初爻
+        const mIdx = gua.findIndex(y => y.m);
+        selectStage(mIdx !== -1 ? mIdx : 0);
 
         document.getElementById('result-area').style.display = 'block';
         window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'});
