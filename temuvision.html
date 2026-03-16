@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TemuVision AI · POD 裂变引擎</title>
+    <style>
+        :root { --temu-orange: #ff4719; --bg: #f5f5f5; --card: #ffffff; --text: #333; }
+        body { font-family: 'PingFang SC', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        header { background: var(--temu-orange); color: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .container { padding: 15px; max-width: 600px; margin: 0 auto; }
+        
+        /* 采集模块 */
+        .module { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        h3 { margin-top: 0; font-size: 1.1rem; border-left: 4px solid var(--temu-orange); padding-left: 10px; }
+        
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        
+        /* 裂变矩阵展示 */
+        .matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .matrix-item { background: #fff8f6; border: 1px dashed var(--temu-orange); padding: 10px; border-radius: 6px; font-size: 0.85rem; }
+
+        /* 状态展示 */
+        .status-bar { display: flex; justify-content: space-between; font-size: 0.8rem; color: #666; padding-top: 10px; }
+
+        button { background: var(--temu-orange); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:active { transform: scale(0.98); }
+        .btn-secondary { background: #333; margin-top: 10px; }
+
+        /* 云同步预览 */
+        .cloud-sync { background: #eef9f2; border: 1px solid #c3e6cb; padding: 10px; border-radius: 6px; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>TemuVision AI v1.0</h1>
+    <div style="font-size: 0.7rem; opacity: 0.9;">POD 全球采集与多维生图系统</div>
+</header>
+
+<div class="container">
+    <!-- 1. 采集诉求 -->
+    <div class="module">
+        <h3>① 全球趋势采集</h3>
+        <input type="text" id="targetSite" placeholder="输入目标平台 (如 Etsy, Amazon)">
+        <input type="text" id="keyword" placeholder="输入爆款关键词 (如: Retro Cat T-shirt)">
+        <button onclick="simulateScrape()">开始主动采集相似款</button>
+        <div id="scrapeResult" class="status-bar">准备绪...</div>
+    </div>
+
+    <!-- 2. 裂变引擎 -->
+    <div class="module">
+        <h3>② 元素多维裂变矩阵</h3>
+        <label>基础元素：</label>
+        <input type="text" id="baseElement" placeholder="主体内容 (如: 戴墨镜的法斗)">
+        
+        <label>裂变维度设置：</label>
+        <select id="styleDimension">
+            <option value="Watercolor">水彩风 (Temu 流行)</option>
+            <option value="Vintage 90s">90s 复古风</option>
+            <option value="Minimalist Line">极简线条</option>
+            <option value="3D Render">3D 渲染效果</option>
+        </select>
+        
+        <div class="matrix-grid" id="matrixOutput">
+            <!-- 逻辑生成的裂变方案 -->
+        </div>
+        
+        <button class="btn-secondary" onclick="generateFission()">生成裂变生图指令 (Prompt)</button>
+    </div>
+
+    <!-- 3. 生图与同步 -->
+    <div class="module">
+        <h3>③ 生图执行与云端同步</h3>
+        <div id="generationStatus" style="font-size: 0.9rem; color: #ff4719;"></div>
+        <button onclick="startAIGen()">执行 AI 批量生图</button>
+        
+        <div id="cloudBox" class="cloud-sync">
+            ✅ <b>中转成功：</b> 已同步至阿里云/Google Drive 目录：<br>
+            <span id="cloudPath" style="font-size: 0.8rem; word-break: break-all;"></span>
+        </div>
+        <button class="btn-secondary" id="downloadBtn" style="display:none;" onclick="downloadZip()">下载全部高清图 (.zip)</button>
+    </div>
+</div>
+
+<script>
+    // 逻辑一：模拟采集
+    function simulateScrape() {
+        const site = document.getElementById('targetSite').value || "Etsy";
+        const kw = document.getElementById('keyword').value || "Default";
+        const bar = document.getElementById('scrapeResult');
+        bar.innerText = `正在分析 ${site} 上的 ${kw} 趋势...`;
+        
+        setTimeout(() => {
+            bar.innerHTML = `✅ 已抓取 120 张相似款 | 热门元素：复古、橙色、手写体`;
+        }, 1500);
+    }
+
+    // 逻辑二：核心裂变引擎 (重点针对多角度、多维度)
+    function generateFission() {
+        const base = document.getElementById('baseElement').value || "设计主体";
+        const style = document.getElementById('styleDimension').value;
+        const matrix = document.getElementById('matrixOutput');
+        matrix.innerHTML = "";
+
+        // 专家逻辑：裂变不仅仅是换颜色，而是换人群和角度
+        const dimensions = [
+            { d: "正面-特写", p: "Front view, macro detail" },
+            { d: "侧面-动感", p: "Side profile, dynamic pose" },
+            { d: "针对女性-马卡龙色", p: "For women, pastel color palette" },
+            { d: "针对极简者-纯黑白", p: "For minimalist, B&W high contrast" }
+        ];
+
+        dimensions.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'matrix-item';
+            div.innerHTML = `<b>${item.d}</b><br>${base}, ${style}, ${item.p}`;
+            matrix.appendChild(div);
+        });
+    }
+
+    // 逻辑三：生图与云同步
+    function startAIGen() {
+        const status = document.getElementById('generationStatus');
+        const cloudBox = document.getElementById('cloudBox');
+        const path = document.getElementById('cloudPath');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        status.innerText = "🚀 AI 正在处理生图矩阵 (1/4)...";
+        
+        // 模拟批量生图过程
+        let count = 1;
+        const interval = setInterval(() => {
+            count++;
+            status.innerText = `🚀 AI 正在处理生图矩阵 (${count}/4)...`;
+            if(count >= 4) {
+                clearInterval(interval);
+                status.innerText = "🎉 批量生图完成！已自动去除底色并优化 Temu 尺寸。";
+                
+                // 模拟云同步
+                cloudBox.style.display = "block";
+                path.innerText = "https://cloud-storage.api/temu_pod/batch_" + Date.now();
+                downloadBtn.style.display = "block";
+            }
+        }, 1000);
+    }
+
+    function downloadZip() {
+        alert("正在打包高清图档与导出 CSV 描述文件...");
+    }
+</script>
+
+</body>
+</html>
